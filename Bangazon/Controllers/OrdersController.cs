@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Bangazon.Data;
 using Bangazon.Models;
 using Microsoft.AspNetCore.Identity;
+using Bangazon.Models.OrderViewModels;
 
 namespace Bangazon.Controllers
 {
@@ -35,7 +36,7 @@ namespace Bangazon.Controllers
         }
 
         // GET: Orders/Details/5
-        public async Task<IActionResult> Details()
+        public async Task<IActionResult> Details(OrderDetailViewModel model)
         {
 
 
@@ -50,7 +51,33 @@ namespace Bangazon.Controllers
                 return NotFound();
             }
 
-            return View(order);
+            return View(model);
+        }
+
+        // GET: Orders/CompletePayment/5
+        public async Task<IActionResult> CompletePayment(int id)
+        {
+            var user = await GetCurrentUserAsync();
+            var order = await _context.Order.FirstOrDefaultAsync(o => o.OrderId == id);
+            var paymentTypes = await _context.PaymentType.Where( p => p.UserId == user.Id).ToListAsync();
+
+            var viewModel = new OrderPaymentViewModel()
+            {
+                Order = order,
+                PaymentTypes = paymentTypes.Select(c => new SelectListItem
+                {
+                    Value = c.PaymentTypeId.ToString(),
+                    Text = c.AccountNumber
+                }).ToList()
+            };
+
+
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+            return View();
         }
 
 
