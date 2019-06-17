@@ -5,6 +5,12 @@
 This version of Bangazon implements the Identity framework, and extends the base User object with the `ApplicationUser` model.
 It shows how to remove a model's property from the automatic model binding in a controller method by using `ModelState.Remove()`.
 
+## Selling Products
+
+After logging in, you can click on the link in the nav bar for "sell a product" and a form will be presented with allows you to add the details of the product you wish to add.  Once you hit 'create' you will be redirected to the details view for that product.
+
+
+
 ## Setup
 
 
