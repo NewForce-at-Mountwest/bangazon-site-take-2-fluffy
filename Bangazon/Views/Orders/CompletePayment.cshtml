@@ -1,0 +1,20 @@
+﻿@model Bangazon.Models.OrderViewModels.OrderPaymentViewModel
+
+@{
+    ViewData["Title"] = "CompletePayment";
+}
+
+<h1>CompletePayment</h1>
+<hr />
+<dl class="row">
+    <dt class="col-sm-2">
+        @Html.DisplayNameFor(model => model.Order.DateCreated)
+    </dt>
+    <dd class="col-sm-10">
+        @Html.DisplayFor(model => model.Order.DateCreated)
+    </dd>
+    <div class="form-group">
+        <label class="control-label">Payments</label>
+        <select asp-for="PaymentTypes" asp-items="@Model.PaymentTypes"></select>
+    </div>
+    </dl>
