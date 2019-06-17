@@ -18,15 +18,16 @@ namespace Bangazon.Areas.Identity.Pages.Account.Manage
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailSender _emailSender;
+        private readonly ApplicationDbContext _context;
 
-        public IndexModel(
-            UserManager<ApplicationUser> userManager,
+        public IndexModel(UserManager<ApplicationUser> userManager, 
             SignInManager<ApplicationUser> signInManager,
-            IEmailSender emailSender)
+            IEmailSender emailSender, ApplicationDbContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
+            _context = context;
         }
 
         public string Username { get; set; }
@@ -83,7 +84,7 @@ namespace Bangazon.Areas.Identity.Pages.Account.Manage
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(ApplicationDbContext context)
+        public async Task<IActionResult> OnPostAsync()
         {
             
             var user = await _userManager.GetUserAsync(User);
@@ -93,13 +94,10 @@ namespace Bangazon.Areas.Identity.Pages.Account.Manage
             {
                 return Page();
             }
-
-            
             if (user == null)
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
-
             var email = await _userManager.GetEmailAsync(user);
             if (Input.Email != email)
             {
@@ -110,11 +108,6 @@ namespace Bangazon.Areas.Identity.Pages.Account.Manage
                     throw new InvalidOperationException($"Unexpected error occurred setting email for user with ID '{userId}'.");
                 }
             }
-
-
-
-          
-
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
             if (Input.PhoneNumber != phoneNumber)
             {
@@ -125,8 +118,8 @@ namespace Bangazon.Areas.Identity.Pages.Account.Manage
                     throw new InvalidOperationException($"Unexpected error occurred setting phone number for user with ID '{userId}'.");
                 }
             }
-            context.Update(user);
-            await context.SaveChangesAsync();
+            _context.Update(user);
+            await _context.SaveChangesAsync();
             await _signInManager.RefreshSignInAsync(user);
             StatusMessage = "Your profile has been updated";
             return RedirectToPage();
