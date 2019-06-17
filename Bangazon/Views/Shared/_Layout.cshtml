@@ -47,7 +47,13 @@
                             @using (Html.BeginForm("Index", "Products", FormMethod.Get))
                             {
                                 <p>
-                                    @Html.TextBox("SearchString", "", new { placeholder = "Search for a Product", style = "width:250px" }) <br />
+                                    @Html.TextBox("SearchString", "", new { placeholder = "Search Products", style = "width:150px" }) <br />
+                                </p>
+                            }
+                            @using (Html.BeginForm("Index", "Products", FormMethod.Get))
+                            {
+                                <p>
+                                    @Html.TextBox("LocationString", "", new { placeholder = "Search Locations", style = "width:150px" }) <br />
                                 </p>
                             }
 

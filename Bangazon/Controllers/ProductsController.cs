@@ -29,7 +29,7 @@ namespace Bangazon.Controllers
 
         // GET: Products
         [Authorize]
-        public async Task<IActionResult> Index(string searchString)
+        public async Task<IActionResult> Index(string searchString, string locationString)
         {
             var currentUser = await GetCurrentUserAsync();
 
@@ -38,6 +38,10 @@ namespace Bangazon.Controllers
             if (searchString != null)
             {
                 applicationDbContext = applicationDbContext.Where(p => p.Title.Contains(searchString));
+            }
+            if (locationString != null)
+            {
+                applicationDbContext = applicationDbContext.Where(p => p.City.Contains(locationString));
             }
 
             return View(await applicationDbContext.ToListAsync());
