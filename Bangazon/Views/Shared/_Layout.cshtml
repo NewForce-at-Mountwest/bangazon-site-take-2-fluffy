@@ -41,10 +41,16 @@
                         </li>
                         @if (SignInManager.IsSignedIn(User))
                         {
-
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="Create">Sell a Product</a>
                             </li>
+                            @using (Html.BeginForm("Index", "Products", FormMethod.Get))
+                            {
+                                <p>
+                                    @Html.TextBox("SearchString", "", new { placeholder = "Search for a Product", style = "width:250px" }) <br />
+                                </p>
+                            }
+
                         }
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">View Cart</a>
