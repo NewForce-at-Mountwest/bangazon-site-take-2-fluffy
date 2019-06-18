@@ -69,10 +69,16 @@
             @Html.DisplayFor(model => model.ProductType.Label)
         </dd>
     </dl>
-    
+
 </div>
-<div>
-    <button class="btn" 
-       asp-controller="Products" asp-action="AddToCart" asp-route-id="@item.ProductId">Add to Cart</button>
+<div class="form-group">
+    <a class="button"
+            asp-controller="Products" asp-action="AddToCart" asp-route-id="@Model.ProductId">
+        Add to Cart
+    </a>
     <a asp-action="Index">Back to List</a>
 </div>
+
+@*<div class="form-group">
+    <input type="submit" value="Save" class="btn btn-primary" />
+</div>*@

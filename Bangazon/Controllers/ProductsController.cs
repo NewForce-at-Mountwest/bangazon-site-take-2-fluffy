@@ -129,23 +129,28 @@ namespace Bangazon.Controllers
                 UserId = currentUser.Id
             };
 
-            OrderProduct orderproduct = new OrderProduct()
-            {
-                //ProductId = id,
-                OrderId = order.OrderId
-            };
+            
 
 
             if (orderList.Any(o => o.PaymentTypeId == null))
             {
-
-                orderproduct.OrderId = order.OrderId;
+                Order currentOrder = orderList.Where(o => o.PaymentTypeId == null).FirstOrDefault();
+                OrderProduct orderproduct = new OrderProduct()
+                {
+                    ProductId = id,
+                    OrderId = currentOrder.OrderId
+                };
+                orderproduct.OrderId = currentOrder.OrderId;
                 _context.Add(orderproduct);
 
             }
             else
             {
-
+                OrderProduct orderproduct = new OrderProduct()
+                {
+                    ProductId = id,
+                    OrderId = order.OrderId
+                };
                 _context.Add(order);
                 _context.Add(orderproduct);
 
