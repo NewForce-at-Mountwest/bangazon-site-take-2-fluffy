@@ -103,8 +103,8 @@ namespace Bangazon.Controllers
         }
 
         //Add to cart method
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpGet]
+        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> AddToCart(int id){
 
             var currentUser = await GetCurrentUserAsync();
@@ -121,17 +121,19 @@ namespace Bangazon.Controllers
 
             OrderProduct orderproduct = new OrderProduct()
             {
-                ProductId = id,
+                //ProductId = id,
                 OrderId = order.OrderId
-        };
+            };
 
 
-            if (orderList.Any(o => o.PaymentTypeId == null)){
-               
+            if (orderList.Any(o => o.PaymentTypeId == null))
+            {
+
                 orderproduct.OrderId = order.OrderId;
                 _context.Add(orderproduct);
 
-            } else
+            }
+            else
             {
 
                 _context.Add(order);
@@ -139,7 +141,7 @@ namespace Bangazon.Controllers
 
             }
 
-                return View(product);
+            return View(product);
         }
 
 
