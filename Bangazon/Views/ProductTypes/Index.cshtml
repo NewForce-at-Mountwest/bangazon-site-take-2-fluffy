@@ -21,12 +21,23 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Label)
+                @Html.DisplayFor(modelItem => item.Label) (@Html.DisplayFor(modelItem => item.Quantity))
+                @foreach (var product in item.Products)
+                {
+                <ul>
+                    @Html.ActionLink(product.Title, "Details", "Products", new { Id = product.ProductId }, null)
+                </ul>
+
+
+                }
             </td>
             <td>
-                
-                <a asp-action="Details" asp-route-id="@item.ProductTypeId">Details</a> 
                
+            </td>
+            <td>
+
+               
+
             </td>
         </tr>
 }

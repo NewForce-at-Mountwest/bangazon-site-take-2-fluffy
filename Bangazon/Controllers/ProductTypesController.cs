@@ -22,7 +22,18 @@ namespace Bangazon.Controllers
         // GET: ProductTypes
         public async Task<IActionResult> Index()
         {
-            return View(await _context.ProductType.ToListAsync());
+            var model = await _context.ProductType.Include(pt => pt.Products).ToListAsync();
+            
+
+            //Count the number of products in each category but take only the top three products for each
+            foreach (ProductType productType in model)
+                {
+                productType.Quantity = productType.Products.Count();
+                ICollection<Product> updatedProductList = productType.Products.Take(3).ToList();
+                productType.Products = updatedProductList;
+            }
+
+            return View(model);
         }
 
         // GET: ProductTypes/Details/5
