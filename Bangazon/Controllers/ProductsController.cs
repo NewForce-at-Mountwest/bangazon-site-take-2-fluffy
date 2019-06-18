@@ -29,11 +29,20 @@ namespace Bangazon.Controllers
 
         // GET: Products
         [Authorize]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString, string locationString)
         {
             var currentUser = await GetCurrentUserAsync();
 
-            var applicationDbContext = _context.Product.Include(p => p.ProductType).Include(p => p.User);
+            var applicationDbContext = _context.Product.Include(p => p.ProductType).Include(p => p.User).Where(p=>p.UserId!=null);
+
+            if (searchString != null)
+            {
+                applicationDbContext = applicationDbContext.Where(p => p.Title.Contains(searchString));
+            }
+            if (locationString != null)
+            {
+                applicationDbContext = applicationDbContext.Where(p => p.City.Contains(locationString));
+            }
 
             return View(await applicationDbContext.ToListAsync());
         }
@@ -65,12 +74,11 @@ namespace Bangazon.Controllers
         {
 
             ProductViewModel productModel = new ProductViewModel();
-            
             SelectList productTypes = new SelectList(_context.ProductType, "ProductTypeId", "Label");
+            // Add a 0 option to the select list
+            SelectList productTypes0 = ProductTypeDropdown(productTypes);
 
-           
-
-            productModel.productTypes = productTypes;
+            productModel.productTypes = productTypes0;
             return View(productModel);
 
 
@@ -97,8 +105,10 @@ namespace Bangazon.Controllers
                 return RedirectToAction("Details", new { id = productModel.product.ProductId });
             }
 
-            SelectList ProductTypes = new SelectList(_context.ProductType, "ProductTypeId", "Label");
-            productModel.productTypes = ProductTypes;
+            SelectList productTypes = new SelectList(_context.ProductType, "ProductTypeId", "Label");
+            // Add a '0' option to the select list
+            SelectList productTypes0 = ProductTypeDropdown(productTypes);
+            productModel.productTypes = productTypes0;
             return View(productModel);
         }
 
@@ -239,6 +249,31 @@ namespace Bangazon.Controllers
         private bool ProductExists(int id)
         {
             return _context.Product.Any(e => e.ProductId == id);
+        }
+
+        /// <summary>
+        /// Adds a '0' option for the select list
+        /// </summary>
+        /// <param name="selectList"></param>
+        /// <returns></returns>
+        public static SelectList ProductTypeDropdown(SelectList selectList)
+        {
+
+            SelectListItem firstItem = new SelectListItem()
+            {
+               Text = "Select a Product Type"
+            };
+            List<SelectListItem> newList = selectList.ToList();
+            newList.Insert(0, firstItem);      
+
+            var selectedItem = newList.FirstOrDefault(item => item.Selected);
+            var selectedItemValue = String.Empty;
+            if (selectedItem != null)
+            {
+                selectedItemValue = selectedItem.Value;
+            }
+
+            return new SelectList(newList, "Value", "Text", selectedItemValue);
         }
     }
 }

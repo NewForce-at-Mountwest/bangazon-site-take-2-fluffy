@@ -5,9 +5,12 @@
 This version of Bangazon implements the Identity framework, and extends the base User object with the `ApplicationUser` model.
 It shows how to remove a model's property from the automatic model binding in a controller method by using `ModelState.Remove()`.
 
+## Viewing Products
+From the home page, the user can enter search terms into one of the two search boxes.  They can either search for product by name, or by location.  Entering a search term will bring them to the index page of the products, with a list matching their search term.  Note, at this point the user may not search for product name and location simultaneously.
+
 ## Selling Products
 
-After logging in, you can click on the link in the nav bar for "sell a product" and a form will be presented with allows you to add the details of the product you wish to add.  Once you hit 'create' you will be redirected to the details view for that product.
+After logging in, you can click on the link in the nav bar for "sell a product" and a form will be presented with allows you to add the details of the product you wish to add.  Once you hit 'create' you will be redirected to the details view for that product.  NOTE:  All the fields except for 'City' and 'Image path' are required and will display an error if they are not completed.
 
 
 
