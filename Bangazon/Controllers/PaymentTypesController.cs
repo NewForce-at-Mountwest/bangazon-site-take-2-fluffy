@@ -101,14 +101,19 @@ namespace Bangazon.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("DateCreated,Description,AccountNumber")] PaymentType paymentType)
+        public async Task<IActionResult> Edit(int id, [Bind("PaymentTypeId, UserId, Description,AccountNumber")] PaymentType paymentType)
         {
+            var currentUser = await GetCurrentUserAsync();
             if (id != paymentType.PaymentTypeId)
             {
                 return NotFound();
             }
-            ModelState.Remove("UserId");
+            
             ModelState.Remove("User");
+            ModelState.Remove("DateCreated");
+            ModelState.Remove("UserId");
+            paymentType.UserId = currentUser.Id;
+            
             if (ModelState.IsValid)
             {
                 try
