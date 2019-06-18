@@ -74,13 +74,11 @@ namespace Bangazon.Controllers
         {
 
             ProductViewModel productModel = new ProductViewModel();
-            
             SelectList productTypes = new SelectList(_context.ProductType, "ProductTypeId", "Label");
-            SelectList productTypes2 = ProductTypeDropdown(productTypes);
+            // Add a 0 option to the select list
+            SelectList productTypes0 = ProductTypeDropdown(productTypes);
 
-           
-
-            productModel.productTypes = productTypes2;
+            productModel.productTypes = productTypes0;
             return View(productModel);
 
 
@@ -107,9 +105,10 @@ namespace Bangazon.Controllers
                 return RedirectToAction("Details", new { id = productModel.product.ProductId });
             }
 
-            SelectList ProductTypes = new SelectList(_context.ProductType, "ProductTypeId", "Label");
-
-            productModel.productTypes = ProductTypes;
+            SelectList productTypes = new SelectList(_context.ProductType, "ProductTypeId", "Label");
+            // Add a '0' option to the select list
+            SelectList productTypes0 = ProductTypeDropdown(productTypes);
+            productModel.productTypes = productTypes0;
             return View(productModel);
         }
 
@@ -204,6 +203,11 @@ namespace Bangazon.Controllers
             return _context.Product.Any(e => e.ProductId == id);
         }
 
+        /// <summary>
+        /// Adds a '0' option for the select list
+        /// </summary>
+        /// <param name="selectList"></param>
+        /// <returns></returns>
         public static SelectList ProductTypeDropdown(SelectList selectList)
         {
 
