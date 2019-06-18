@@ -129,8 +129,6 @@ namespace Bangazon.Controllers
                 UserId = currentUser.Id
             };
 
-            
-
 
             if (orderList.Any(o => o.PaymentTypeId == null))
             {
@@ -142,6 +140,8 @@ namespace Bangazon.Controllers
                 };
                 orderproduct.OrderId = currentOrder.OrderId;
                 _context.Add(orderproduct);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
 
             }
             else
@@ -153,6 +153,8 @@ namespace Bangazon.Controllers
                 };
                 _context.Add(order);
                 _context.Add(orderproduct);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
 
             }
 
