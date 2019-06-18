@@ -102,6 +102,52 @@ namespace Bangazon.Controllers
             return View(productModel);
         }
 
+        //Add to cart method
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddToCart(int id){
+
+            var currentUser = await GetCurrentUserAsync();
+
+            var product = await _context.Product.FirstOrDefaultAsync(p => p.ProductId == id);
+
+            List<Order> orderList = await _context.Order.Where(o => o.UserId == currentUser.Id).ToListAsync();
+
+            Order order = new Order()
+            {
+                DateCreated = DateTime.Now,
+                UserId = currentUser.Id
+            };
+
+            OrderProduct orderproduct = new OrderProduct()
+            {
+                ProductId = id,
+                OrderId = order.OrderId
+        };
+
+
+            if (orderList.Any(o => o.PaymentTypeId == null)){
+               
+                orderproduct.OrderId = order.OrderId;
+                _context.Add(orderproduct);
+
+            } else
+            {
+
+                _context.Add(order);
+                _context.Add(orderproduct);
+
+            }
+
+                return View(product);
+        }
+
+
+
+
+
+
+
         // GET: Products/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
