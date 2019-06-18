@@ -1,0 +1,45 @@
+﻿@model IEnumerable<Bangazon.Models.ProductType>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Product Types</h1>
+
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Label)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Label) (@Html.DisplayFor(modelItem => item.Quantity))
+                @foreach (var product in item.Products)
+                {
+                <ul>
+                    @Html.ActionLink(product.Title, "Details", "Products", new { Id = product.ProductId }, null)
+                </ul>
+
+
+                }
+            </td>
+            <td>
+               
+            </td>
+            <td>
+
+               
+
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
