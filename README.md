@@ -1,15 +1,13 @@
 # Welcome to Bangazon!
 
-## Overview
-
-This version of Bangazon implements the Identity framework, and extends the base User object with the `ApplicationUser` model.
-It shows how to remove a model's property from the automatic model binding in a controller method by using `ModelState.Remove()`.
-
-## Product Types
-Clicking on the list of product types, the user can see each category of product type and the total quantity of products in that category listed next to the name.  Below the category name, will be the top three products in that category.  The name of the product will be a hyperlink that can take you to the details view of that product.
+## Home
+The home page will show the user the top 20 recent items that have been added to the database.  Clicking on the name of the item will take the user to the details view for that item.
 
 ## Viewing Products
 From the home page, the user can enter search terms into one of the two search boxes.  They can either search for product by name, or by location.  Entering a search term will bring them to the index page of the products, with a list matching their search term.  Note, at this point the user may not search for product name and location simultaneously.
+
+## Product Types
+Clicking on the list of product types, the user can see each category of product type and the total quantity of products in that category listed next to the name.  Below the category name, will be the top three products in that category.  The name of the product will be a hyperlink that can take you to the details view of that product.
 
 ## Selling Products
 
@@ -17,6 +15,11 @@ After logging in, you can click on the link in the nav bar for "sell a product" 
 
 
 
+
+## Overview
+
+This version of Bangazon implements the Identity framework, and extends the base User object with the `ApplicationUser` model.
+It shows how to remove a model's property from the automatic model binding in a controller method by using `ModelState.Remove()`.
 ## Setup
 
 
