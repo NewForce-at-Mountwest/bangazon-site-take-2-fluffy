@@ -41,7 +41,7 @@ namespace Bangazon.Controllers
             }
             if (locationString != null)
             {
-                applicationDbContext = applicationDbContext.Where(p => p.City.Contains(locationString));
+                applicationDbContext = applicationDbContext.Where(p => p.City.Contains(locationString) && p.LocalDelivery == true);
             }
 
             return View(await applicationDbContext.ToListAsync());
