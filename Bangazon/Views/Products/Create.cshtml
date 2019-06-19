@@ -10,7 +10,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Create" enctype="multipart/form-data" >
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="product.Title" class="control-label"></label>
@@ -50,6 +50,24 @@
                 <input asp-for="product.ImagePath" class="form-control" />
                 <span asp-validation-for="product.ImagePath" class="text-danger"></span>
             </div>
+            <div class="form-group">
+                <div class="col-md-10">
+                    <p>Upload a Product Image:</p>
+                    <input type="file" name= "ProductImage" asp-for="ProductImage" >
+                </div>
+            </div>
+            @*<div class="form-group">
+                <div class="col-md-10">
+                    <input type="submit" value="Upload">
+                </div>
+            </div>*@
+
+            @*<div class="form-group">
+            @Html.Label("ProductImage", "", new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <input type="image" id="ProductImage" name="upload" />
+            </div>
+        </div>*@
             <div class="form-group form-check">
                 <label class="form-check-label">
                     <input class="form-check-input" asp-for="product.Active" /> @Html.DisplayNameFor(model => model.product.Active)

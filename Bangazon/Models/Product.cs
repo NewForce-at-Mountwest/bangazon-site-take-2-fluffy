@@ -1,8 +1,10 @@
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.IO;
 
 namespace Bangazon.Models
 {
@@ -37,8 +39,15 @@ namespace Bangazon.Models
         public string UserId {get; set;}
 
         public string City {get; set;}
+
         [Display(Name = "Image")]
+
         public string ImagePath {get; set;}
+
+        [Display(Name = "Image")]
+
+        public byte[] ProductImage { get; set; }
+
 
         public bool Active { get; set; }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Web;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,6 +11,8 @@ using Bangazon.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Bangazon.Models.ProductViewModels;
+using System.IO;
+using Microsoft.AspNetCore.Http;
 
 namespace Bangazon.Controllers
 {
@@ -93,12 +96,17 @@ namespace Bangazon.Controllers
         {
             ModelState.Remove("product.User");
             ModelState.Remove("product.UserId");
-            
+
             if (ModelState.IsValid)
             {
                 var currentUser = await GetCurrentUserAsync();
 
                 productModel.product.UserId = currentUser.Id;
+                using (var memoryStream = new MemoryStream())
+                {
+                    await productModel.ProductImage.CopyToAsync(memoryStream);
+                    productModel.product.ProductImage = memoryStream.ToArray();
+                }
 
                 _context.Add(productModel.product);
                 await _context.SaveChangesAsync();
@@ -227,5 +235,32 @@ namespace Bangazon.Controllers
 
             return new SelectList(newList, "Value", "Text", selectedItemValue);
         }
+
+        [HttpPost("UploadFiles")]
+        public async Task<IActionResult> Post(List<IFormFile> files)
+        {
+            long size = files.Sum(f => f.Length);
+
+            // full path to file in temp location
+            var filePath = Path.GetTempFileName();
+
+            foreach (var formFile in files)
+            {
+                if (formFile.Length > 0)
+                {
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await formFile.CopyToAsync(stream);
+                    }
+                }
+            }
+
+            // process uploaded files
+            // Don't rely on or trust the FileName property without validation.
+
+            return Ok(new { count = files.Count, size, filePath });
+        }
+
+
     }
 }
