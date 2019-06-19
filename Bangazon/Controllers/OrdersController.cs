@@ -50,7 +50,9 @@ namespace Bangazon.Controllers
 
             var OrderProducts = await _context.OrderProduct.Include(o => o.Product).ToListAsync();
 
-            model.OrderProducts = OrderProducts.ToList();
+            
+            Order.OrderProducts = OrderProducts.ToList();
+            model = Order;
             if (Order == null || Order.UserId != user.Id)
             {
                 return NotFound();
@@ -65,6 +67,7 @@ namespace Bangazon.Controllers
             var user = await GetCurrentUserAsync();
             var order = await _context.Order.FirstOrDefaultAsync(o => o.OrderId == id);
             var paymentTypes = await _context.PaymentType.Where( p => p.UserId == user.Id).ToListAsync();
+
 
             var viewModel = new OrderPaymentViewModel()
             {
@@ -82,7 +85,7 @@ namespace Bangazon.Controllers
                 return NotFound();
             }
 
-            return View();
+            return View(viewModel);
         }
 
 

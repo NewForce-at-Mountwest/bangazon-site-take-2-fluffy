@@ -4,7 +4,7 @@
     ViewData["Title"] = "CompletePayment";
 }
 
-<h1>CompletePayment</h1>
+<h1>Complete Payment</h1>
 <hr />
 <dl class="row">
     <dt class="col-sm-2">
@@ -15,6 +15,6 @@
     </dd>
     <div class="form-group">
         <label class="control-label">Payments</label>
-        <select asp-for="PaymentTypes" asp-items="@Model.PaymentTypes"></select>
+        <select asp-for="Order.PaymentTypeId" asp-items="@Model.PaymentTypes"></select>
     </div>
     </dl>
