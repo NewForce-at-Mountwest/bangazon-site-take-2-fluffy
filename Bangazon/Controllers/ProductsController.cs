@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Web;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,6 +11,8 @@ using Bangazon.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Bangazon.Models.ProductViewModels;
+using System.IO;
+using Microsoft.AspNetCore.Http;
 
 namespace Bangazon.Controllers
 {
@@ -103,12 +106,18 @@ namespace Bangazon.Controllers
         {
             ModelState.Remove("product.User");
             ModelState.Remove("product.UserId");
-            
+
             if (ModelState.IsValid)
             {
                 var currentUser = await GetCurrentUserAsync();
 
                 productModel.product.UserId = currentUser.Id;
+                //Store the image in a temp location as it comes back from the uploader
+                using (var memoryStream = new MemoryStream())
+                {
+                    await productModel.ProductImage.CopyToAsync(memoryStream);
+                    productModel.product.ProductImage = memoryStream.ToArray();
+                }
 
                 _context.Add(productModel.product);
                 await _context.SaveChangesAsync();
@@ -237,5 +246,7 @@ namespace Bangazon.Controllers
 
             return new SelectList(newList, "Value", "Text", selectedItemValue);
         }
+
+       
     }
 }
