@@ -94,17 +94,29 @@ namespace Bangazon.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ProductViewModel productModel)
         {
+            SelectList productTypes = new SelectList(_context.ProductType, "ProductTypeId", "Label");
+            // Add a '0' option to the select list
+            SelectList productTypes0 = ProductTypeDropdown(productTypes);
+
             ModelState.Remove("product.User");
             ModelState.Remove("product.UserId");
-           
 
-            if (ModelState.IsValid)
+            //If the user has not entered a city but local delivery is checked, return back to the view with an error
+            if (productModel.product.LocalDelivery == true && productModel.product.City==null)
+            {
+                productModel.ErrorMessage = new string("You must enter a city if Local Delivery is selected");
+                productModel.productTypes = productTypes0;
+                return View(productModel);
+
+            }
+
+            else if (ModelState.IsValid)
             {
                 var currentUser = await GetCurrentUserAsync();
 
                 productModel.product.UserId = currentUser.Id;
 
-                if(productModel.product.ProductImage != null) { 
+                if(productModel.ProductImage != null) { 
                 //Store the image in a temp location as it comes back from the uploader
                 using (var memoryStream = new MemoryStream())
                 {
@@ -118,9 +130,7 @@ namespace Bangazon.Controllers
                 return RedirectToAction("Details", new { id = productModel.product.ProductId });
             }
 
-            SelectList productTypes = new SelectList(_context.ProductType, "ProductTypeId", "Label");
-            // Add a '0' option to the select list
-            SelectList productTypes0 = ProductTypeDropdown(productTypes);
+            
             productModel.productTypes = productTypes0;
             return View(productModel);
         }
