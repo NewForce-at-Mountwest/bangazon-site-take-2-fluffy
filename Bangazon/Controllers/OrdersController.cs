@@ -12,6 +12,7 @@ using Bangazon.Models.OrderViewModels;
 
 namespace Bangazon.Controllers
 {
+    //Manages order creation and completion - Authored by Sable Bowen
     public class OrdersController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -62,13 +63,16 @@ namespace Bangazon.Controllers
         }
 
         // GET: Orders/CompletePayment/5
+
+        //Gets order and payment types for payment completion dropdown list in view
         public async Task<IActionResult> CompletePayment(int id)
         {
             var user = await GetCurrentUserAsync();
             var order = await _context.Order.FirstOrDefaultAsync(o => o.OrderId == id);
-            var paymentTypes = await _context.PaymentType.Where( p => p.UserId == user.Id).ToListAsync();
+            var paymentTypes = await _context.PaymentType.Where(p => p.UserId == user.Id).ToListAsync();
 
 
+            //Creates dropdown for payment types
             var viewModel = new OrderPaymentViewModel()
             {
                 Order = order,
@@ -78,14 +82,40 @@ namespace Bangazon.Controllers
                     Text = c.AccountNumber
                 }).ToList()
             };
+            return View(viewModel);
 
-
-            if (order == null)
+        }
+            [HttpPost]
+            //GET: Orders/PaymentUpdate/5
+            public async Task<IActionResult> CompletePayment([Bind("Id")]OrderPaymentViewModel vm)
             {
-                return NotFound();
+
+            //Gets Order
+            var order = await _context.Order.Include(o => o.OrderProducts).FirstOrDefaultAsync(o => o.OrderId == vm.Order.OrderId);
+
+            var OrderProducts = await _context.OrderProduct.Include(o => o.Product).ToListAsync();
+
+            order.DateCompleted = DateTime.Now;
+
+            //Loops through products, decrements their quantity, and updates database
+            foreach(OrderProduct singleOrderProduct in OrderProducts)
+            {
+                singleOrderProduct.Product.Quantity = singleOrderProduct.Product.Quantity - 1;
+                _context.Update(singleOrderProduct.Product);
             }
 
-            return View(viewModel);
+
+            if (ModelState.IsValid)
+            {
+                _context.Update(order);
+                
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+
+
+            
+            return View(vm);
         }
 
 

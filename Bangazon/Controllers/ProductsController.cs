@@ -121,11 +121,13 @@ namespace Bangazon.Controllers
             return View(productModel);
         }
 
-        //Add to cart method
+        //Add to cart method - Authored by Sable Bowen
         [HttpGet]
         //[ValidateAntiForgeryToken]
+
         public async Task<IActionResult> AddToCart(int id){
 
+            //Gets user, products in cart, and the currently open order
             var currentUser = await GetCurrentUserAsync();
 
             var product = await _context.Product.FirstOrDefaultAsync(p => p.ProductId == id);
@@ -138,7 +140,7 @@ namespace Bangazon.Controllers
                 UserId = currentUser.Id
             };
 
-
+            //Checks if any orders are incomplete/current and adds the product to the incomplete order if it exists
             if (orderList.Any(o => o.PaymentTypeId == null))
             {
                 Order currentOrder = orderList.Where(o => o.PaymentTypeId == null).FirstOrDefault();
@@ -154,6 +156,7 @@ namespace Bangazon.Controllers
 
             }
             else
+            //Adds a new order and the product to the new order if one is not already open
             {
                 OrderProduct orderproduct = new OrderProduct()
                 {
