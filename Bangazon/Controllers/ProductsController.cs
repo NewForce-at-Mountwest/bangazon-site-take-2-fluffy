@@ -96,17 +96,21 @@ namespace Bangazon.Controllers
         {
             ModelState.Remove("product.User");
             ModelState.Remove("product.UserId");
+           
 
             if (ModelState.IsValid)
             {
                 var currentUser = await GetCurrentUserAsync();
 
                 productModel.product.UserId = currentUser.Id;
+
+                if(productModel.product.ProductImage != null) { 
                 //Store the image in a temp location as it comes back from the uploader
                 using (var memoryStream = new MemoryStream())
                 {
                     await productModel.ProductImage.CopyToAsync(memoryStream);
                     productModel.product.ProductImage = memoryStream.ToArray();
+                }
                 }
 
                 _context.Add(productModel.product);
