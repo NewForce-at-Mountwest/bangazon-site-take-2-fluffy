@@ -36,11 +36,20 @@ namespace Bangazon.Controllers
             return View(await applicationDbContext.ToListAsync());
         }
 
+        public async Task<IActionResult> EmptyCart()
+        {
+            return View();
+        }
+
+
         // GET: Orders/Details/5
         public async Task<IActionResult> Details(Order model)
         {
 
-
+            if(model.OrderId == 0)
+            {
+                return RedirectToAction(nameof(EmptyCart));
+            }
 
            var user = await GetCurrentUserAsync();
             var Order = await _context.Order
@@ -49,10 +58,13 @@ namespace Bangazon.Controllers
                 .FirstOrDefaultAsync(m => m.UserId == user.Id);
 
 
-            var OrderProducts = await _context.OrderProduct.Include(o => o.Product).ToListAsync();
+            var OrderProducts = await _context.OrderProduct.Include(o => o.Product).Where(o => o.OrderId == model.OrderId).ToListAsync();
 
+            if (OrderProducts.Count() > 0)
+            {
+                Order.OrderProducts = OrderProducts.ToList();
+            }
             
-            Order.OrderProducts = OrderProducts.ToList();
             model = Order;
             if (Order == null || Order.UserId != user.Id)
             {
