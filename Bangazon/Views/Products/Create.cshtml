@@ -10,7 +10,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create" enctype="multipart/form-data" >
+        <form asp-action="Create" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="product.Title" class="control-label"></label>
@@ -39,28 +39,36 @@
                     <input class="form-check-input" asp-for="product.Active" /> @Html.DisplayNameFor(model => model.product.Active)
                 </label>
             </div>
+            <div class="form-group form-check">
+                <label class="form-check-label" id="LocalDelivery">
+                    <input class="form-check-input" asp-for="product.LocalDelivery" />
+                    @Html.DisplayNameFor(model => model.product.LocalDelivery)?
 
-            <div class="form-group">
-                <label asp-for="product.City" class="control-label"></label>
-                <input asp-for="product.City" class="form-control" />
-                <span asp-validation-for="product.City" class="text-danger"></span>
-            </div>
-           
-            <div class="form-group">
-                <label asp-for="product.ProductTypeId" class="control-label"></label>
-                <select asp-for="product.ProductTypeId" class="form-control" asp-items="@Model.productTypes"></select>
-                <span asp-validation-for="product.ProductTypeId" class="text-danger"></span>
+                </label>
+                </div>
+
+                <div class="form-group" id="City">
+                    <label asp-for="product.City" class="control-label"></label>
+                    <input asp-for="product.City" class="form-control" />
+                    <span asp-validation-for="product.City" class="text-danger"></span>
+                </div>
 
                 <div class="form-group">
-                    <br>
-                    <label>Upload a Product Image:</label>
+                    <label asp-for="product.ProductTypeId" class="control-label"></label>
+                    <select asp-for="product.ProductTypeId" class="form-control" asp-items="@Model.productTypes"></select>
+                    <span asp-validation-for="product.ProductTypeId" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <br>
+                        <label>Upload a Product Image:</label>
                         <input type="file" name="ProductImage" asp-for="ProductImage">
-                   
+
+                    </div>
+                
+                <div class="form-group">
+                    <input type="submit" value="Create" class="btn btn-primary" />
                 </div>
-             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
         </form>
     </div>
 </div>
@@ -71,4 +79,12 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script type="text/javascript">
+    $(function () {
+                    $("#City").hide();
+                    $("#LocalDelivery").click(function () {
+                    $("#City").toggle();
+                    });
+                });
+    </script>
 }
