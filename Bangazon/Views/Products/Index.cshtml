@@ -76,7 +76,8 @@
             </td>
            
             <td>
-                @Html.DisplayFor(modelItem => item.ProductType.Label)
+                            @Html.ActionLink(item.ProductType.Label, "Details", "ProductTypes", new { Id = item.ProductType.ProductTypeId }, null)
+
             </td>
             <td>
                 <a asp-action="Details" asp-route-id="@item.ProductId">Details</a> 

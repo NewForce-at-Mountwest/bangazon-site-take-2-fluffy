@@ -80,7 +80,7 @@
             @Html.DisplayNameFor(model => model.ProductType)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ProductType.Label)
+            @Html.ActionLink(Model.ProductType.Label, "Details", "ProductTypes", new { Id = Model.ProductType.ProductTypeId }, null)
         </dd>
     </dl>
 </div>
