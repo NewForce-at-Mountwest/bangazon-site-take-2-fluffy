@@ -11,7 +11,7 @@ Clicking on the list of product types, the user can see each category of product
 
 ## Selling Products
 
-After logging in, you can click on the link in the nav bar for "sell a product" and a form will be presented with allows you to add the details of the product you wish to add.  Once you hit 'create' you will be redirected to the details view for that product.  NOTE:  All the fields except for 'City' and 'Image path' are required and will display an error if they are not completed.
+After logging in, you can click on the link in the nav bar for "sell a product" and a form will be presented with allows you to add the details of the product you wish to add.  You can even upload an image of the product!  Once you hit 'create' you will be redirected to the details view for that product.  NOTE:  All the fields except for 'City' and 'Image' are required and will display an error if they are not completed.
 
 
 
