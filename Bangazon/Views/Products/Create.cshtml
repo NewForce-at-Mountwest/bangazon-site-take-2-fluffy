@@ -46,8 +46,6 @@
                 <span asp-validation-for="product.City" class="text-danger"></span>
             </div>
            
-                 
-            
             <div class="form-group">
                 <label asp-for="product.ProductTypeId" class="control-label"></label>
                 <select asp-for="product.ProductTypeId" class="form-control" asp-items="@Model.productTypes"></select>
@@ -57,11 +55,9 @@
                     <br>
                     <label>Upload a Product Image:</label>
                         <input type="file" name="ProductImage" asp-for="ProductImage">
-                    
+                   
                 </div>
-
-
-            </div>
+             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>

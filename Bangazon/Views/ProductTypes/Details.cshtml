@@ -7,17 +7,38 @@
 <h1>Details</h1>
 
 <div>
-    <h4>ProductType</h4>
+    <h4> @Html.DisplayFor(model => model.Label)</h4>
     <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Label)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Label)
-        </dd>
-    </dl>
+
 </div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+               Title
+            </th>
+            <th>
+               Quantity
+            </th>
+            <th>
+               Price
+            </th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Products)
+        {
+        <tr>
+           <td> @Html.ActionLink(item.Title, "Details", "Products", new { Id = item.ProductId }, null)</td>
+            <td>@Html.DisplayFor(product => item.Quantity)</td>
+            <td>@Html.DisplayFor(product => item.Price)</td>
+        </tr>
+        }
+    </tbody>
+</table>
 <div>
-       <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">View All Categories</a> |
+    <span>@Html.ActionLink("View All Products", "Index", "Products")</span>
 </div>
