@@ -87,7 +87,7 @@ namespace Bangazon.Controllers
         }
         [HttpPost]
         //GET: Orders/PaymentUpdate/5
-        public async Task<IActionResult> CompletePayment(int id,[Bind("OrderId, PaymentTypeId, DateCreated, DateCompleted, UserId")]OrderPaymentViewModel vm)
+        public async Task<IActionResult> CompletePayment(int id, OrderPaymentViewModel vm)
             {
 
 
@@ -97,6 +97,7 @@ namespace Bangazon.Controllers
             var OrderProducts = await _context.OrderProduct.Include(o => o.Product).Where(o => o.OrderId == id).ToListAsync();
 
             order.DateCompleted = DateTime.Now;
+            order.PaymentTypeId = vm.Order.PaymentTypeId;
 
             //Loops through products, decrements their quantity, and updates database
             foreach(OrderProduct singleOrderProduct in OrderProducts)
@@ -105,7 +106,8 @@ namespace Bangazon.Controllers
                 _context.Update(singleOrderProduct.Product);
             }
 
-
+            ModelState.Remove("Order.UserId");
+            ModelState.Remove("Order.User");
             if (ModelState.IsValid)
             {
                 _context.Update(order);
@@ -116,7 +118,7 @@ namespace Bangazon.Controllers
 
 
             
-            return View(order);
+            return View(vm);
         }
 
 
