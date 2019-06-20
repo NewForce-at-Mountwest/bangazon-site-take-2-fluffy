@@ -38,6 +38,7 @@ namespace Bangazon.Controllers
 
         public async Task<IActionResult> EmptyCart()
         {
+            //View that displays when a cart is empty
             return View();
         }
 
@@ -45,11 +46,8 @@ namespace Bangazon.Controllers
         // GET: Orders/Details/5
         public async Task<IActionResult> Details(Order model)
         {
+            //If cart is empty, redirect to a view with a message saying the cart is empty
 
-            if(model.OrderId == 0)
-            {
-                return RedirectToAction(nameof(EmptyCart));
-            }
 
            var user = await GetCurrentUserAsync();
             var Order = await _context.Order
@@ -57,13 +55,16 @@ namespace Bangazon.Controllers
                 .Include(o => o.User).Include(o => o.OrderProducts).Where(o => o.PaymentTypeId == null && o.UserId == user.Id)
                 .FirstOrDefaultAsync(m => m.UserId == user.Id);
 
-
-            var OrderProducts = await _context.OrderProduct.Include(o => o.Product).Where(o => o.OrderId == model.OrderId).ToListAsync();
-
-            if (OrderProducts.Count() > 0)
+            if (Order.OrderId == 0)
             {
-                Order.OrderProducts = OrderProducts.ToList();
+                return RedirectToAction(nameof(EmptyCart));
             }
+
+            var OrderProducts = await _context.OrderProduct.Where(o => o.OrderId == Order.OrderId).Include(o => o.Product).ToListAsync();
+
+
+                Order.OrderProducts = OrderProducts.ToList();
+            
             
             model = Order;
             if (Order == null || Order.UserId != user.Id)
@@ -97,6 +98,12 @@ namespace Bangazon.Controllers
             return View(viewModel);
 
         }
+
+        public async Task<IActionResult> Confirmation()
+        {
+            return View();
+        }
+
         [HttpPost]
         //GET: Orders/PaymentUpdate/5
         public async Task<IActionResult> CompletePayment(int id, OrderPaymentViewModel vm)
@@ -125,7 +132,7 @@ namespace Bangazon.Controllers
                 _context.Update(order);
                 
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Confirmation));
             }
 
 

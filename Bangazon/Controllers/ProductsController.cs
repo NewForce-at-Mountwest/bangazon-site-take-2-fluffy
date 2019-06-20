@@ -158,12 +158,14 @@ namespace Bangazon.Controllers
             else
             //Adds a new order and the product to the new order if one is not already open
             {
+
+                _context.Add(order);
+                await _context.SaveChangesAsync();
                 OrderProduct orderproduct = new OrderProduct()
                 {
                     ProductId = id,
                     OrderId = order.OrderId
                 };
-                _context.Add(order);
                 _context.Add(orderproduct);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
