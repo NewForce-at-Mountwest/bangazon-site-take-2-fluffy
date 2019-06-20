@@ -85,15 +85,16 @@ namespace Bangazon.Controllers
             return View(viewModel);
 
         }
-            [HttpPost]
-            //GET: Orders/PaymentUpdate/5
-            public async Task<IActionResult> CompletePayment([Bind("Id")]OrderPaymentViewModel vm)
+        [HttpPost]
+        //GET: Orders/PaymentUpdate/5
+        public async Task<IActionResult> CompletePayment(int id,[Bind("OrderId, PaymentTypeId, DateCreated, DateCompleted, UserId")]OrderPaymentViewModel vm)
             {
 
-            //Gets Order
-            var order = await _context.Order.Include(o => o.OrderProducts).FirstOrDefaultAsync(o => o.OrderId == vm.Order.OrderId);
 
-            var OrderProducts = await _context.OrderProduct.Include(o => o.Product).ToListAsync();
+            //Gets Order
+            var order = await _context.Order.Include(o => o.OrderProducts).FirstOrDefaultAsync(o => o.OrderId == id);
+
+            var OrderProducts = await _context.OrderProduct.Include(o => o.Product).Where(o => o.OrderId == id).ToListAsync();
 
             order.DateCompleted = DateTime.Now;
 
@@ -115,7 +116,7 @@ namespace Bangazon.Controllers
 
 
             
-            return View(vm);
+            return View(order);
         }
 
 
