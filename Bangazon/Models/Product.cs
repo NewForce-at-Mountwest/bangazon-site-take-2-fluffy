@@ -8,7 +8,7 @@ using System.IO;
 
 namespace Bangazon.Models
 {
-    public class Product
+    public class Product : IValidatableObject
     {
         [Key]
         public int ProductId {get;set;}
@@ -37,17 +37,12 @@ namespace Bangazon.Models
 
         [Required]
         public string UserId {get; set;}
-
         public string City {get; set;}
-
-        [Display(Name = "Image")]
-
+        [Display(Name = "Local Delivery")]
         public bool LocalDelivery { get; set; }
 
-
+        [Display(Name = "Image")]
         public byte[] ProductImage { get; set; }
-
-
 
         public bool Active { get; set; }
 
@@ -66,6 +61,16 @@ namespace Bangazon.Models
         public Product ()
         {
             Active = true;
+        }
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (LocalDelivery && string.IsNullOrEmpty(City))
+            {
+                yield return new ValidationResult(
+                    $"You must select a city for delivery."
+                 );
+            }
         }
 
     }

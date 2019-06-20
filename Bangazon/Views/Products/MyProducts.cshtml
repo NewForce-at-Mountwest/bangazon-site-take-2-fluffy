@@ -28,7 +28,7 @@
                 @Html.DisplayNameFor(model => model.City)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ImagePath)
+                @Html.DisplayNameFor(model => model.LocalDelivery)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Active)
@@ -61,7 +61,15 @@
                 @Html.DisplayFor(modelItem => item.City)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ImagePath)
+                @if (item.ProductImage != null)
+                {
+
+                    var base64 = Convert.ToBase64String(item.ProductImage);
+                    var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+
+
+                    <img class="userImg" style="width:40px" src="@imgSrc" />
+                }
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Active)

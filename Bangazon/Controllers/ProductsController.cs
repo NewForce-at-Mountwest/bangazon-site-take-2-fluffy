@@ -106,11 +106,9 @@ namespace Bangazon.Controllers
         {
             ModelState.Remove("product.User");
             ModelState.Remove("product.UserId");
-
             if (ModelState.IsValid)
             {
                 var currentUser = await GetCurrentUserAsync();
-
                 productModel.product.UserId = currentUser.Id;
                 //Store the image in a temp location as it comes back from the uploader
                 using (var memoryStream = new MemoryStream())
