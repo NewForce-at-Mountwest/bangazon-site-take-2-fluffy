@@ -10,7 +10,7 @@
     <h4>Order @Model.OrderId</h4>
     @if (Model.DateCompleted == null) { 
 
-    @Html.ActionLink("Delete", "Delete", new { id = Model.OrderId })
+    @Html.ActionLink("Cancel Order", "Delete", new { id = Model.OrderId })
         }
     <hr />
         <dl class="row">
