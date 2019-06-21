@@ -207,6 +207,8 @@ namespace Bangazon.Controllers
             var order = await _context.Order
                 .Include(o => o.PaymentType)
                 .Include(o => o.User)
+                .Include(o=>o.OrderProducts)
+                .ThenInclude(op=>op.Product)
                 .FirstOrDefaultAsync(m => m.OrderId == id);
             if (order == null)
             {
@@ -225,6 +227,8 @@ namespace Bangazon.Controllers
             foreach(var orderItem in orderItems) { 
             _context.OrderProduct.Remove(orderItem);
             }
+            await _context.SaveChangesAsync();
+
 
             var order = await _context.Order.FindAsync(id);
             _context.Order.Remove(order);
