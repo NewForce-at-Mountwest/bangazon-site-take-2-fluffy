@@ -4,7 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Active Products</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -31,9 +31,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.ProductImage)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Active)
-            </th>
+            
             <th>
                 @Html.DisplayNameFor(model => model.ProductType)
             </th>
@@ -71,9 +69,8 @@
                     <img class="userImg" style="width:40px" src="@imgSrc" />
                 }
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Active)
-            </td>
+          
+          
            
             <td>
                             @Html.ActionLink(item.ProductType.Label, "Details", "ProductTypes", new { Id = item.ProductType.ProductTypeId }, null)

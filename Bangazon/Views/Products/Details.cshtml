@@ -85,12 +85,20 @@
     </dl>
 
 </div>
+@if (Model.Active == true && Model.Quantity > 0) { 
 <div class="form-group">
     <a class="btn btn-primary"
             asp-controller="Products" asp-action="AddToCart" asp-route-id="@Model.ProductId">
         Add to Cart
     </a>
-    <a asp-action="Index">Back to List</a>
+    </div>
+    
+}
+else
+{
+    <div class="text-danger">Out of Stock</div>
+}
+    
 <div>
     <a asp-action="Index">View All Products</a>  |
     <span>@Html.ActionLink("View All Categories", "Index", "ProductTypes" )</span>
