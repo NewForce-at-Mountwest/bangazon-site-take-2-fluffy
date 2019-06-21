@@ -53,16 +53,14 @@
   
     </div>
 <div>
-    @try
+    @if (Model.PaymentType == null)
     {
         <a asp-action="CompletePayment" asp-route-id="@Model.OrderId">Complete Payment</a>
         <br />
-        <a asp-action="Index">Back to List</a>
+
     }
-    catch
-    {
-        <a asp-action="Index">Back to List</a>
-    }
+
+    <a asp-action="Index">Back to List</a>
 
 
 </div>
