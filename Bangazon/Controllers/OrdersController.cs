@@ -44,7 +44,7 @@ namespace Bangazon.Controllers
 
 
         // GET: Orders/Details/5
-        public async Task<IActionResult> Details(Order model)
+        public async Task<IActionResult> Details(int id, Order model)
         {
             //If cart is empty, redirect to a view with a message saying the cart is empty
 
@@ -52,8 +52,8 @@ namespace Bangazon.Controllers
            var user = await GetCurrentUserAsync();
             var Order = await _context.Order
                 .Include(o => o.PaymentType)
-                .Include(o => o.User).Include(o => o.OrderProducts).Where(o => o.PaymentTypeId == null && o.UserId == user.Id)
-                .FirstOrDefaultAsync(m => m.UserId == user.Id);
+                .Include(o => o.User).Include(o => o.OrderProducts).Where(o => o.OrderId == id)
+                .FirstOrDefaultAsync(o => o.OrderId == id);
 
             if (Order == null)
             {
@@ -66,13 +66,13 @@ namespace Bangazon.Controllers
                 Order.OrderProducts = OrderProducts.ToList();
             
             
-            model = Order;
+            
             if (Order == null || Order.UserId != user.Id)
             {
                 return NotFound();
             }
 
-            return View(model);
+            return View(Order);
         }
 
         // GET: Orders/CompletePayment/5
