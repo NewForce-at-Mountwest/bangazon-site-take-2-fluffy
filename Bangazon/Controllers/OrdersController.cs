@@ -221,6 +221,11 @@ namespace Bangazon.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            var orderItems = await _context.OrderProduct.Where(op=>op.OrderId==id).ToListAsync();
+            foreach(var orderItem in orderItems) { 
+            _context.OrderProduct.Remove(orderItem);
+            }
+
             var order = await _context.Order.FindAsync(id);
             _context.Order.Remove(order);
             await _context.SaveChangesAsync();
