@@ -50,29 +50,57 @@ namespace Bangazon.Controllers
 
 
            var user = await GetCurrentUserAsync();
-            var Order = await _context.Order
+
+
+
+            if(id == 0)
+            {
+                var Order = await _context.Order.Include(o => o.PaymentType).Include(o => o.User).Include(o => o.OrderProducts).Where(o => o.PaymentTypeId == null && o.UserId == user.Id).FirstOrDefaultAsync();
+
+
+
+                if (Order == null)
+                {
+                    return RedirectToAction(nameof(EmptyCart));
+                }
+
+                var OrderProducts = await _context.OrderProduct.Where(o => o.OrderId == Order.OrderId).Include(o => o.Product).ToListAsync();
+
+
+                Order.OrderProducts = OrderProducts.ToList();
+
+
+
+                if (Order == null || Order.UserId != user.Id)
+                {
+                    return NotFound();
+                }
+
+                return View(Order);
+
+            } else
+            {
+                var Order = await _context.Order
                 .Include(o => o.PaymentType)
                 .Include(o => o.User).Include(o => o.OrderProducts).Where(o => o.OrderId == id)
                 .FirstOrDefaultAsync(o => o.OrderId == id);
 
-            if (Order == null)
-            {
-                return RedirectToAction(nameof(EmptyCart));
-            }
-
-            var OrderProducts = await _context.OrderProduct.Where(o => o.OrderId == Order.OrderId).Include(o => o.Product).ToListAsync();
+                var OrderProducts = await _context.OrderProduct.Where(o => o.OrderId == Order.OrderId).Include(o => o.Product).ToListAsync();
 
 
                 Order.OrderProducts = OrderProducts.ToList();
-            
-            
-            
-            if (Order == null || Order.UserId != user.Id)
-            {
-                return NotFound();
+
+
+
+                if (Order == null || Order.UserId != user.Id)
+                {
+                    return NotFound();
+                }
+
+                return View(Order);
             }
 
-            return View(Order);
+
         }
 
         // GET: Orders/CompletePayment/5
