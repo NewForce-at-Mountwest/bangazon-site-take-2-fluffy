@@ -14,6 +14,7 @@ namespace Bangazon.Models.ProductViewModels
         public SelectList productTypes { get; set; }
         public IFormFile ProductImage { get; set; }
 
+        public string ErrorMessage { get; set; }
     }
 
 }
