@@ -207,6 +207,8 @@ namespace Bangazon.Controllers
             var order = await _context.Order
                 .Include(o => o.PaymentType)
                 .Include(o => o.User)
+                .Include(o=>o.OrderProducts)
+                .ThenInclude(op=>op.Product)
                 .FirstOrDefaultAsync(m => m.OrderId == id);
             if (order == null)
             {
@@ -221,6 +223,13 @@ namespace Bangazon.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            var orderItems = await _context.OrderProduct.Where(op=>op.OrderId==id).ToListAsync();
+            foreach(var orderItem in orderItems) { 
+            _context.OrderProduct.Remove(orderItem);
+            }
+            await _context.SaveChangesAsync();
+
+
             var order = await _context.Order.FindAsync(id);
             _context.Order.Remove(order);
             await _context.SaveChangesAsync();
@@ -231,5 +240,7 @@ namespace Bangazon.Controllers
         {
             return _context.Order.Any(e => e.OrderId == id);
         }
+
+       
     }
 }
