@@ -152,7 +152,7 @@ namespace Bangazon.Controllers
                 orderproduct.OrderId = currentOrder.OrderId;
                 _context.Add(orderproduct);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                
 
             }
             else
@@ -168,7 +168,7 @@ namespace Bangazon.Controllers
                 };
                 _context.Add(orderproduct);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                
 
             }
 
