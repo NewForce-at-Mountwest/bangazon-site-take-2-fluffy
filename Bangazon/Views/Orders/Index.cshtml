@@ -17,7 +17,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.DateCompleted)
             </th>
-            
+
             <th>
                 @Html.DisplayNameFor(model => model.PaymentType)
             </th>
@@ -54,8 +54,7 @@
 
 
             <td>
-                <a asp-action="Edit" asp-route-id="@item.OrderId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.UserId">Details</a>
+                <a asp-action="Details" asp-route-id="@item.OrderId">Details</a>
 
                 @if (item.DateCompleted == null)
                 {

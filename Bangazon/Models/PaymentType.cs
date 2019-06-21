@@ -21,6 +21,7 @@ namespace Bangazon.Models
     public string Description { get; set; }
 
     [Required]
+    [Display(Name = "Payment Type")]
     [StringLength(20)]
     public string AccountNumber { get; set; }
 
