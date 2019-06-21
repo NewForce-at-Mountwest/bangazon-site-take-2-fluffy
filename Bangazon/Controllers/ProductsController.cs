@@ -55,13 +55,11 @@ namespace Bangazon.Controllers
         public async Task<IActionResult> MyProducts()
         {
             var currentUser = await GetCurrentUserAsync();
-            ProductCountViewModel countModel = new ProductCountViewModel();
             var applicationDbContext = 
                 _context.Product.Include(p => p.ProductType)
                 .Include(p => p.User)
                 .Include(c => c.OrderProducts)
                 .Where(p => p.UserId == currentUser.Id);
-                
             return View(await applicationDbContext.ToListAsync());
         }
 
