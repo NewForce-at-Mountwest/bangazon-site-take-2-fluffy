@@ -7,8 +7,12 @@
 <h1>Details</h1>
 
 <div>
-    <h4>Order</h4>
-    <hr />
+    <h4>Order @Model.OrderId</h4>
+    
+        <input type="hidden" asp-for="OrderId" />
+        <input type="submit" value="Delete" class="btn btn-danger" />       
+
+        <hr />
         <dl class="row">
             <dt class="col-sm-2">
                 @Html.DisplayNameFor(model => model.DateCreated)
@@ -48,12 +52,14 @@
                         @Html.DisplayFor(modelItem => product.Product.Title)
                     </dd>
                     <button asp-action="DELETE" asp-route-id="@Model.OrderId">Remove Product</button>
+
                 }
             }
 
         </dl>
-  
-    </div>
+
+
+</div>
 <div>
     @try
     {
