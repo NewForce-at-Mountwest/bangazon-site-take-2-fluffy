@@ -98,23 +98,41 @@ namespace Bangazon.Controllers
         }
 
         // POST: Products/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ProductViewModel productModel)
         {
+            SelectList productTypes = new SelectList(_context.ProductType, "ProductTypeId", "Label");
+            // Add a '0' option to the select list
+            SelectList productTypes0 = ProductTypeDropdown(productTypes);
+
             ModelState.Remove("product.User");
             ModelState.Remove("product.UserId");
             if (ModelState.IsValid)
+
+            //If the user has not entered a city but local delivery is checked, return back to the view with an error
+            if (productModel.product.LocalDelivery == true && productModel.product.City==null)
+            {
+                productModel.ErrorMessage = new string("You must enter a city if Local Delivery is selected");
+                productModel.productTypes = productTypes0;
+                return View(productModel);
+
+            }
+
+            else if (ModelState.IsValid)
             {
                 var currentUser = await GetCurrentUserAsync();
                 productModel.product.UserId = currentUser.Id;
+
+                if(productModel.ProductImage != null) {
                 //Store the image in a temp location as it comes back from the uploader
                 using (var memoryStream = new MemoryStream())
                 {
                     await productModel.ProductImage.CopyToAsync(memoryStream);
                     productModel.product.ProductImage = memoryStream.ToArray();
+                }
                 }
 
                 _context.Add(productModel.product);
@@ -122,12 +140,70 @@ namespace Bangazon.Controllers
                 return RedirectToAction("Details", new { id = productModel.product.ProductId });
             }
 
-            SelectList productTypes = new SelectList(_context.ProductType, "ProductTypeId", "Label");
-            // Add a '0' option to the select list
-            SelectList productTypes0 = ProductTypeDropdown(productTypes);
+
             productModel.productTypes = productTypes0;
             return View(productModel);
         }
+
+        //Add to cart method - Authored by Sable Bowen
+        [HttpGet]
+        //[ValidateAntiForgeryToken]
+
+        public async Task<IActionResult> AddToCart(int id){
+
+            //Gets user, products in cart, and the currently open order
+            var currentUser = await GetCurrentUserAsync();
+
+            var product = await _context.Product.FirstOrDefaultAsync(p => p.ProductId == id);
+
+            List<Order> orderList = await _context.Order.Where(o => o.UserId == currentUser.Id).ToListAsync();
+
+            Order order = new Order()
+            {
+                DateCreated = DateTime.Now,
+                UserId = currentUser.Id
+            };
+
+            //Checks if any orders are incomplete/current and adds the product to the incomplete order if it exists
+            if (orderList.Any(o => o.PaymentTypeId == null))
+            {
+                Order currentOrder = orderList.Where(o => o.PaymentTypeId == null).FirstOrDefault();
+                OrderProduct orderproduct = new OrderProduct()
+                {
+                    ProductId = id,
+                    OrderId = currentOrder.OrderId
+                };
+                orderproduct.OrderId = currentOrder.OrderId;
+                _context.Add(orderproduct);
+                await _context.SaveChangesAsync();
+
+
+            }
+            else
+            //Adds a new order and the product to the new order if one is not already open
+            {
+
+                _context.Add(order);
+                await _context.SaveChangesAsync();
+                OrderProduct orderproduct = new OrderProduct()
+                {
+                    ProductId = id,
+                    OrderId = order.OrderId
+                };
+                _context.Add(orderproduct);
+                await _context.SaveChangesAsync();
+
+
+            }
+
+            return View(product);
+        }
+
+
+
+
+
+
 
         // GET: Products/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -148,7 +224,7 @@ namespace Bangazon.Controllers
         }
 
         // POST: Products/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -233,7 +309,7 @@ namespace Bangazon.Controllers
                Text = "Select a Product Type"
             };
             List<SelectListItem> newList = selectList.ToList();
-            newList.Insert(0, firstItem);      
+            newList.Insert(0, firstItem);
 
             var selectedItem = newList.FirstOrDefault(item => item.Selected);
             var selectedItemValue = String.Empty;
@@ -245,6 +321,6 @@ namespace Bangazon.Controllers
             return new SelectList(newList, "Value", "Text", selectedItemValue);
         }
 
-       
+
     }
 }

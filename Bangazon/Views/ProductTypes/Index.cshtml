@@ -21,24 +21,17 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Label) (@Html.DisplayFor(modelItem => item.Quantity))
+                @Html.ActionLink(item.Label, "Details", "ProductTypes", new { Id = item.ProductTypeId }, null) (@Html.DisplayFor(modelItem => item.Quantity))
                 @foreach (var product in item.Products)
                 {
-                <ul>
-                    @Html.ActionLink(product.Title, "Details", "Products", new { Id = product.ProductId }, null)
-                </ul>
+                    <ul>
+                        @Html.ActionLink(product.Title, "Details", "Products", new { Id = product.ProductId }, null)
+                    </ul>
 
 
                 }
             </td>
-            <td>
-               
-            </td>
-            <td>
-
-               
-
-            </td>
+           
         </tr>
 }
     </tbody>
