@@ -7,7 +7,11 @@
 <h1>Details</h1>
 
 <div>
-    <h4>Order</h4>
+    <h4>Order @Model.OrderId</h4>
+    @if (Model.DateCompleted == null) { 
+
+    @Html.ActionLink("Cancel Order", "Delete", new { id = Model.OrderId })
+        }
     <hr />
         <dl class="row">
             <dt class="col-sm-2">
@@ -20,10 +24,10 @@
                 @Html.DisplayNameFor(model => model.DateCompleted)
             </dt>
             <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.DateCompleted)
+                @Html.DisplayFor(model => model.DateCompleted) 
             </dd>
             <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.PaymentTypeId)
+                @Html.DisplayNameFor(model => model.PaymentType)
             </dt>
             <dd class="col-sm-10">
                 @Html.DisplayFor(model => model.PaymentType.AccountNumber)
@@ -49,9 +53,10 @@
                 }
             }
 
-        </dl>
-  
-    </div>
+    </dl>
+
+
+</div>
 <div>
     @if (Model.PaymentType == null)
     {

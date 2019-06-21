@@ -7,7 +7,6 @@
 <h1>Index</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
 </p>
 <table class="table">
     <thead>
@@ -18,9 +17,11 @@
             <th>
                 @Html.DisplayNameFor(model => model.DateCompleted)
             </th>
+
             <th>
-                @Html.DisplayNameFor(model => model.PaymentType.AccountNumber)
+                @Html.DisplayNameFor(model => model.PaymentType)
             </th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -29,14 +30,38 @@
             <td>
                 @Html.DisplayFor(modelItem => item.DateCreated)
             </td>
+
+            @if (item.DateCompleted != null)
+            {
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateCompleted)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PaymentType.Description)
+
+                    (@Html.DisplayFor(modelItem => item.PaymentType.AccountNumber))
+                </td>
+            }
+            else
+            {
+                <td>
+                    In Process
+                </td>
+                <td>
+                    Incomplete
+                </td>
+            }
+
+
             <td>
-                @Html.DisplayFor(modelItem => item.DateCompleted)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PaymentType.AccountNumber)
-            </td>
-            <td>
-                <a asp-action="Details" asp-route-id="@item.OrderId">Details</a>     
+                <a asp-action="Edit" asp-route-id="@item.OrderId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.UserId">Details</a>
+
+                @if (item.DateCompleted == null)
+                {
+                    <span>|</span>
+                    <a asp-action="Delete" asp-route-id="@item.OrderId">Cancel Order</a>
+                }
             </td>
         </tr>
 }
