@@ -13,9 +13,11 @@ namespace Bangazon.Models
 
     [Required]
     [DataType(DataType.Date)]
+    [Display(Name = "Date Created")]
     [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
     public DateTime DateCreated {get;set;}
 
+    [Display(Name = "Date Completed")]
     [DataType(DataType.Date)]
     public DateTime? DateCompleted {get;set;}
 
@@ -26,6 +28,8 @@ namespace Bangazon.Models
     public ApplicationUser User { get; set; }
 
     public int? PaymentTypeId {get;set;}
+
+    [Display(Name = "Payment Type")]
     public PaymentType PaymentType {get;set;}
 
     public virtual ICollection<OrderProduct> OrderProducts { get; set; }
