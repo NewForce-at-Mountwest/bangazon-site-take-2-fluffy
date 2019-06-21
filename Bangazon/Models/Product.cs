@@ -40,10 +40,12 @@ namespace Bangazon.Models
 
         public string City {get; set;}
 
-
         [Display(Name = "Image")]
 
         public byte[] ProductImage { get; set; }
+
+        [Display(Name = "Local Delivery")]
+        public bool LocalDelivery { get; set; }
 
 
         public bool Active { get; set; }
@@ -64,6 +66,9 @@ namespace Bangazon.Models
         {
             Active = true;
         }
+        
+
+    
 
     }
 }
