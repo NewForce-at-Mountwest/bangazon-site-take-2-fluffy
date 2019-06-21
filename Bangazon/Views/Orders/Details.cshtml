@@ -57,4 +57,15 @@
 
 
 </div>
+<div>
+    @if (Model.PaymentType == null)
+    {
+        <a asp-action="CompletePayment" asp-route-id="@Model.OrderId">Complete Payment</a>
+        <br />
 
+    }
+
+    <a asp-action="Index">Back to List</a>
+
+
+</div>
