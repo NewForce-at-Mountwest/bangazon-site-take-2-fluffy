@@ -44,8 +44,18 @@ namespace Bangazon.Controllers
             }
             if (locationString != null)
             {
-                applicationDbContext = applicationDbContext.Where(p => p.City.Contains(locationString));
+                applicationDbContext = applicationDbContext.Where(p => p.City.Contains(locationString) && p.LocalDelivery == true);
             }
+
+            return View(await applicationDbContext.ToListAsync());
+        }
+
+        [Authorize]
+        public async Task<IActionResult> MyProducts()
+        {
+            var currentUser = await GetCurrentUserAsync();
+
+            var applicationDbContext = _context.Product.Include(p => p.ProductType).Include(p => p.User).Where(p => p.UserId == currentUser.Id);
 
             return View(await applicationDbContext.ToListAsync());
         }
@@ -88,7 +98,7 @@ namespace Bangazon.Controllers
         }
 
         // POST: Products/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -100,6 +110,7 @@ namespace Bangazon.Controllers
 
             ModelState.Remove("product.User");
             ModelState.Remove("product.UserId");
+            if (ModelState.IsValid)
 
             //If the user has not entered a city but local delivery is checked, return back to the view with an error
             if (productModel.product.LocalDelivery == true && productModel.product.City==null)
@@ -113,10 +124,9 @@ namespace Bangazon.Controllers
             else if (ModelState.IsValid)
             {
                 var currentUser = await GetCurrentUserAsync();
-
                 productModel.product.UserId = currentUser.Id;
 
-                if(productModel.ProductImage != null) { 
+                if(productModel.ProductImage != null) {
                 //Store the image in a temp location as it comes back from the uploader
                 using (var memoryStream = new MemoryStream())
                 {
@@ -130,7 +140,7 @@ namespace Bangazon.Controllers
                 return RedirectToAction("Details", new { id = productModel.product.ProductId });
             }
 
-            
+
             productModel.productTypes = productTypes0;
             return View(productModel);
         }
@@ -166,7 +176,7 @@ namespace Bangazon.Controllers
                 orderproduct.OrderId = currentOrder.OrderId;
                 _context.Add(orderproduct);
                 await _context.SaveChangesAsync();
-                
+
 
             }
             else
@@ -182,7 +192,7 @@ namespace Bangazon.Controllers
                 };
                 _context.Add(orderproduct);
                 await _context.SaveChangesAsync();
-                
+
 
             }
 
@@ -216,9 +226,10 @@ namespace Bangazon.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var product = await _context.Product.FindAsync(id);
-            _context.Product.Remove(product);
+            product.Active = false;
+            _context.Product.Update(product);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(MyProducts));
         }
 
         private bool ProductExists(int id)
@@ -239,7 +250,7 @@ namespace Bangazon.Controllers
                Text = "Select a Product Type"
             };
             List<SelectListItem> newList = selectList.ToList();
-            newList.Insert(0, firstItem);      
+            newList.Insert(0, firstItem);
 
             var selectedItem = newList.FirstOrDefault(item => item.Selected);
             var selectedItemValue = String.Empty;
@@ -251,6 +262,6 @@ namespace Bangazon.Controllers
             return new SelectList(newList, "Value", "Text", selectedItemValue);
         }
 
-       
+
     }
 }
