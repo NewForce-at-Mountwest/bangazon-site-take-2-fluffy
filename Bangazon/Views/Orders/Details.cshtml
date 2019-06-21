@@ -1,0 +1,64 @@
+﻿@model Bangazon.Models.Order
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Order</h4>
+    <hr />
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.DateCreated)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.DateCreated)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.DateCompleted)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.DateCompleted)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.PaymentTypeId)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.PaymentType.AccountNumber)
+            </dd>
+        </dl>
+        <dl>
+            <h5>Products</h5>
+            @if (Model.OrderProducts != null)
+            {
+                @foreach (var product in Model.OrderProducts)
+                {
+                    <dt class="col-sm-2">
+                        @Html.DisplayNameFor(modelItem => product.Product.Title)
+                    </dt>
+                    <dd class="col-sm-10">
+                        @Html.DisplayFor(modelItem => product.Product.Title)
+                    </dd>
+                    <button asp-action="DELETE" asp-route-id="@Model.OrderId">Remove Product</button>
+                }
+            }
+
+        </dl>
+  
+    </div>
+<div>
+    @try
+    {
+        <a asp-action="CompletePayment" asp-route-id="@Model.OrderId">Complete Payment</a>
+        <br />
+        <a asp-action="Index">Back to List</a>
+    }
+    catch
+    {
+        <a asp-action="Index">Back to List</a>
+    }
+
+
+</div>
