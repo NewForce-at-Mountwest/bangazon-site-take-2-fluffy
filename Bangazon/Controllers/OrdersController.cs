@@ -55,7 +55,7 @@ namespace Bangazon.Controllers
                 .Include(o => o.User).Include(o => o.OrderProducts).Where(o => o.PaymentTypeId == null && o.UserId == user.Id)
                 .FirstOrDefaultAsync(m => m.UserId == user.Id);
 
-            if (Order.OrderId == 0)
+            if (Order == null)
             {
                 return RedirectToAction(nameof(EmptyCart));
             }
