@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 using Bangazon.Models.ProductViewModels;
 using System.IO;
 using Microsoft.AspNetCore.Http;
+using Bangazon.Models.OrderViewModels;
 
 namespace Bangazon.Controllers
 {
@@ -55,8 +56,11 @@ namespace Bangazon.Controllers
         {
             var currentUser = await GetCurrentUserAsync();
 
-            var applicationDbContext = _context.Product.Include(p => p.ProductType).Include(p => p.User).Where(p => p.UserId == currentUser.Id);
-
+            var applicationDbContext = _context.Product.Include(p => p.ProductType)
+                .Include(p => p.User)
+                .Include(c => c.OrderProducts)
+                .Where(p => p.UserId == currentUser.Id);
+            
             return View(await applicationDbContext.ToListAsync());
         }
 
