@@ -125,6 +125,7 @@ namespace Bangazon.Controllers
             {
                 var currentUser = await GetCurrentUserAsync();
                 productModel.product.UserId = currentUser.Id;
+                    productModel.product.Active = true;
 
                 if(productModel.ProductImage != null) {
                 //Store the image in a temp location as it comes back from the uploader
