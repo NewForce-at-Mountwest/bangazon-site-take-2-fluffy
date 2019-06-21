@@ -80,7 +80,10 @@
             <td>
                 <a asp-action="Details" asp-route-id="@item.ProductId">Details</a>
                 <br />
+                @if (item.Active == true)
+                {
                 <a asp-action="Delete" asp-route-id="@item.ProductId">Delete</a>
+                }
             </td>
         </tr>
 }
