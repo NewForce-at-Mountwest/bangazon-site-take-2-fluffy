@@ -56,7 +56,8 @@ namespace Bangazon.Controllers
         {
             var currentUser = await GetCurrentUserAsync();
 
-            var applicationDbContext = _context.Product.Include(p => p.ProductType)
+            var applicationDbContext = 
+                _context.Product.Include(p => p.ProductType)
                 .Include(p => p.User)
                 .Include(c => c.OrderProducts)
                 .Where(p => p.UserId == currentUser.Id);
